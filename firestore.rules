@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+      match /some_collection/{id} {
+          allow read: if hasIdInArray(resource.data.listOfIds);
+          allow write: if true;
+      }
+
+      function hasIdInArray(ids) {
+          return request.auth.token.access_map.keys().hasAny(ids);
+      }
+  }
+}
